@@ -138,7 +138,7 @@ def process_update(update):
             }
 
             receiver_id_display = escape_markdown(receiver_display_name)
-            code_content = format_block_code(whispers[unique_id])
+            code_content = format_block_code(whispers[unique_id]).replace("هنوز دیده نشده", "Unopened")
             public_text = f"{receiver_id_display}\n\n```\n{code_content}\n```"
 
             reply_target = f"@{sender_username}" if sender_username else str(sender_id)
@@ -206,7 +206,7 @@ def process_update(update):
                 whisper_data["curious_users"].add(user_display_name)
 
             receiver_id_display = escape_markdown(whisper_data["receiver_display_name"])
-            code_content = format_block_code(whisper_data)
+            code_content = format_block_code(whisper_data).replace("هنوز دیده نشده", "Unopened")
             new_text = f"{receiver_id_display}\n\n```\n{code_content}\n```"
 
             reply_target = f"@{whisper_data['sender_username']}" if whisper_data['sender_username'] else str(whisper_data['sender_id'])

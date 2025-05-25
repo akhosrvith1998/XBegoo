@@ -30,7 +30,13 @@ def process_update(update):
             "id": "base",
             "title": "💡 راهنمای نجوا",
             "input_message_content": {
-                "message_text": f"✅ فرمت صحیح: @{BOT_USERNAME} @یوزرنیم یا آیدی_عددی پیام\nمثال: @{BOT_USERNAME} @user1 سلام یا @{BOT_USERNAME} 123456789 سلام"
+                "message_text": (
+                    "راهنمای نجوا:\n\n"
+                    "روش اول با یوزرنیم گیرنده:\n"
+                    "@XBegoobot @username متن نجوا\n\n"
+                    "روش دوم با آیدی عددی گیرنده:\n"
+                    "@XBegoobot 1234567890 متن نجوا"
+                )
             },
             "description": "همیشه فعال!"
         }

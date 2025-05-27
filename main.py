@@ -25,38 +25,35 @@ def process_update(update):
             answer_inline_query(query_id, cached_results)
             return
 
-        base_result = {
-            "type": "article",
-            "id": "base",
-            "title": "💡 راهنمای نجوا",
-            "input_message_content": {
-                "message_text": (
-                    "راهنمای نجوا:\n\n"
-                    "روش اول با یوزرنیم گیرنده:\n"
-                    "@XBegoobot @username متن نجوا\n\n"
-                    "روش دوم با آیدی عددی گیرنده:\n"
-                    "@XBegoobot 1234567890 متن نجوا"
-                )
-            },
-            "description": "همیشه فعال!"
-        }
-
         if not query_text:
-            results = [base_result]
+            results = [
+                {
+                    "type": "article",
+                    "id": "start",
+                    "title": "* یوزرنیم یا آیدی عددی گیرنده",
+                    "description": "یوزرنیم یا آیدی عددی گیرنده را وارد کنید",
+                    "input_message_content": {
+                        "message_text": "لطفاً یوزرنیم یا آیدی عددی گیرنده را وارد کنید"
+                    },
+                    "reply_markup": {
+                        "inline_keyboard": [[
+                            {"text": "شروع", "switch_inline_query_current_chat": "@XBegoobot "}
+                        ]]
+                    }
+                }
+            ]
+            # اضافه کردن موارد تاریخچه
             if sender_id in history:
                 for receiver in sorted(history[sender_id], key=lambda x: x["display_name"]):
                     results.append({
                         "type": "article",
                         "id": f"history_{receiver['receiver_id']}",
-                        "title": f"نجوا به {receiver['display_name']} ✨",
-                        "input_message_content": {
-                            "message_text": f"📩 پیام خود را برای {receiver['display_name']} وارد کنید"
-                        },
+                        "title": f"نجوا به {receiver['display_name']}",
                         "description": f"ارسال نجوا به {receiver['first_name']}",
                         "thumb_url": receiver.get("profile_photo_url", ""),
                         "reply_markup": {
                             "inline_keyboard": [[
-                                {"text": "ارسال نجوا 🚀", "switch_inline_query_current_chat": f"@{BOT_USERNAME} {receiver['receiver_id']} "}
+                                {"text": "ارسال نجوا", "switch_inline_query_current_chat": f"@XBegoobot {receiver['receiver_id']} "}
                             ]]
                         }
                     })
@@ -64,32 +61,46 @@ def process_update(update):
             answer_inline_query(query_id, results)
             return
 
-        try:
-            parts = query_text.split(" ", 1)
-            if len(parts) < 2:
-                results = [base_result]
-                if sender_id in history:
-                    for receiver in sorted(history[sender_id], key=lambda x: x["display_name"]):
-                        if parts[0].lower() in receiver['display_name'].lower() or parts[0].lower() in receiver['first_name'].lower():
-                            results.append({
-                                "type": "article",
-                                "id": f"history_{receiver['receiver_id']}",
-                                "title": f"نجوا به {receiver['display_name']} ✨",
-                                "input_message_content": {
-                                    "message_text": f"📩 پیام خود را برای {receiver['display_name']} وارد کنید"
-                                },
-                                "description": f"ارسال نجوا به {receiver['first_name']}",
-                                "thumb_url": receiver.get("profile_photo_url", ""),
-                                "reply_markup": {
-                                    "inline_keyboard": [[
-                                        {"text": "ارسال نجوا 🚀", "switch_inline_query_current_chat": f"@{BOT_USERNAME} {receiver['receiver_id']} "}
-                                    ]]
-                                }
-                            })
-                set_cached_inline_query(sender_id, query_text, results)
-                answer_inline_query(query_id, results)
-                return
+        parts = query_text.split(" ", 1)
+        if len(parts) == 1:
+            recipient = parts[0]
+            results = [
+                {
+                    "type": "article",
+                    "id": "enter_message",
+                    "title": "حالا متن نجوا",
+                    "description": f"متن نجوا برای {recipient} را وارد کنید",
+                    "input_message_content": {
+                        "message_text": f"لطفاً متن نجوا برای {recipient} را وارد کنید"
+                    },
+                    "reply_markup": {
+                        "inline_keyboard": [[
+                            {"text": "وارد کردن متن", "switch_inline_query_current_chat": f"@XBegoobot {recipient} "}
+                        ]]
+                    }
+                }
+            ]
+            # اضافه کردن موارد تاریخچه مرتبط
+            if sender_id in history:
+                for receiver in sorted(history[sender_id], key=lambda x: x["display_name"]):
+                    if recipient.lower() in receiver['display_name'].lower() or recipient.lower() in receiver['first_name'].lower():
+                        results.append({
+                            "type": "article",
+                            "id": f"history_{receiver['receiver_id']}",
+                            "title": f"نجوا به {receiver['display_name']}",
+                            "description": f"ارسال نجوا به {receiver['first_name']}",
+                            "thumb_url": receiver.get("profile_photo_url", ""),
+                            "reply_markup": {
+                                "inline_keyboard": [[
+                                    {"text": "ارسال نجوا", "switch_inline_query_current_chat": f"@XBegoobot {receiver['receiver_id']} "}
+                                ]]
+                            }
+                        })
+            set_cached_inline_query(sender_id, query_text, results)
+            answer_inline_query(query_id, results)
+            return
 
+        try:
             receiver_id = parts[0]
             secret_message = parts[1].strip()
 
@@ -154,21 +165,31 @@ def process_update(update):
                 {
                     "type": "article",
                     "id": unique_id,
-                    "title": f"🔒 نجوا به {receiver_display_name} 🎉",
+                    "title": f"* ارسال نجوا به {receiver_display_name}",
                     "input_message_content": {
                         "message_text": public_text,
                         "parse_mode": "MarkdownV2"
                     },
                     "reply_markup": keyboard,
                     "description": f"پیام: {secret_message[:15]}..."
-                },
-                base_result
+                }
             ]
             answer_inline_query(query_id, results)
 
         except Exception as e:
             logger.error("Inline query error: %s", str(e))
-            answer_inline_query(query_id, [base_result])
+            results = [
+                {
+                    "type": "article",
+                    "id": "error",
+                    "title": "خطا",
+                    "description": "فرمت نادرست. لطفاً از فرمت صحیح استفاده کنید: @XBegoobot @username متن نجوا",
+                    "input_message_content": {
+                        "message_text": "فرمت نادرست. لطفاً از فرمت صحیح استفاده کنید: @XBegoobot @username متن نجوا"
+                    }
+                }
+            ]
+            answer_inline_query(query_id, results)
 
     elif "callback_query" in update:
         callback = update["callback_query"]

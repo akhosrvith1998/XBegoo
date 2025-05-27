@@ -2,7 +2,7 @@ import requests
 from datetime import datetime, timezone, timedelta
 import json
 
-TOKEN = "7672898225:AAHymEtVaPhC9SbKKSjCaRlkPx68S4ujLEc"
+TOKEN = "7844345303:AAGyDzl4oJjm646ePdx0YQP32ARuhWL6qHk"
 URL = f"https://api.telegram.org/bot{TOKEN}/"
 IRST_OFFSET = timedelta(hours=3, minutes=30)
 PROFILE_PHOTO_CACHE = {}  # کش برای عکس‌های پروفایل

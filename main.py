@@ -7,7 +7,7 @@ from cache import get_cached_inline_query, set_cached_inline_query
 from logger import logger
 
 whispers = {}
-BOT_USERNAME = "XBegoobot"
+BOT_USERNAME = "XBCodebot"
 
 def process_update(update):
     if "inline_query" in update:
@@ -37,7 +37,7 @@ def process_update(update):
                     },
                     "reply_markup": {
                         "inline_keyboard": [[
-                            {"text": "شروع", "switch_inline_query_current_chat": "@XBegoobot "}
+                            {"text": "شروع", "switch_inline_query_current_chat": f"@{BOT_USERNAME} "}
                         ]]
                     }
                 }
@@ -53,7 +53,7 @@ def process_update(update):
                         "thumb_url": receiver.get("profile_photo_url", ""),
                         "reply_markup": {
                             "inline_keyboard": [[
-                                {"text": "ارسال نجوا", "switch_inline_query_current_chat": f"@XBegoobot {receiver['receiver_id']} "}
+                                {"text": "ارسال نجوا", "switch_inline_query_current_chat": f"@{BOT_USERNAME} {receiver['receiver_id']} "}
                             ]]
                         }
                     })
@@ -75,7 +75,7 @@ def process_update(update):
                     },
                     "reply_markup": {
                         "inline_keyboard": [[
-                            {"text": "وارد کردن متن", "switch_inline_query_current_chat": f"@XBegoobot {recipient} "}
+                            {"text": "وارد کردن متن", "switch_inline_query_current_chat": f"@{BOT_USERNAME} {recipient} "}
                         ]]
                     }
                 }
@@ -92,7 +92,7 @@ def process_update(update):
                             "thumb_url": receiver.get("profile_photo_url", ""),
                             "reply_markup": {
                                 "inline_keyboard": [[
-                                    {"text": "ارسال نجوا", "switch_inline_query_current_chat": f"@XBegoobot {receiver['receiver_id']} "}
+                                    {"text": "ارسال نجوا", "switch_inline_query_current_chat": f"@{BOT_USERNAME} {receiver['receiver_id']} "}
                                 ]]
                             }
                         })
@@ -183,9 +183,9 @@ def process_update(update):
                     "type": "article",
                     "id": "error",
                     "title": "خطا",
-                    "description": "فرمت نادرست. لطفاً از فرمت صحیح استفاده کنید: @XBegoobot @username متن نجوا",
+                    "description": f"فرمت نادرست. لطفاً از فرمت صحیح استفاده کنید: @{BOT_USERNAME} @username متن نجوا",
                     "input_message_content": {
-                        "message_text": "فرمت نادرست. لطفاً از فرمت صحیح استفاده کنید: @XBegoobot @username متن نجوا"
+                        "message_text": f"فرمت نادرست. لطفاً از فرمت صحیح استفاده کنید: @{BOT_USERNAME} @username متن نجوا"
                     }
                 }
             ]
